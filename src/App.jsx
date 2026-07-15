@@ -9,9 +9,9 @@ function pathFromWindow(initialPath) {
 
 export default function App({ initialPath = '/', prerender = false }) {
   const [path, setPath] = useState(pathFromWindow(initialPath))
-  const [templates, setTemplates] = useState(() => (prerender ? loadTemplates() : []))
+  const [templates, setTemplates] = useState(() => loadTemplates())
   const [activeIndex, setActiveIndex] = useState(3)
-  const [preloadRest, setPreloadRest] = useState(prerender)
+  const [preloadRest, setPreloadRest] = useState(false)
   const activeTemplate = templates[activeIndex]
   const activeUrl = useMemo(() => templateTarget(activeTemplate, path), [activeTemplate, path])
   const templateUrls = useMemo(
