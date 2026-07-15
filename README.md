@@ -40,6 +40,8 @@ For example, if a visitor is viewing `/contact/` and switches UI, the next templ
 - Portfolio 4 loads first for the fastest initial view.
 - The remaining templates preload in hidden iframes after the default site starts.
 - Switching after preload is a visibility change instead of a full cold load.
+- The first browser render matches the prerendered HTML so React hydration stays stable on Vercel.
+- The site includes `/favicon.ico` for apex and `www` domain browser requests.
 - The first client render matches the prerendered HTML to avoid React hydration errors on production.
 - A favicon is included at `/favicon.ico` for the apex and `www` domains.
 
@@ -66,6 +68,12 @@ VITE_TEMPLATE_URLS=https://site-1.com,https://site-2.com,https://site-3.com,http
 
 ## Deployment Notes
 
-The four individual portfolio sites must allow iframe embedding and cross-origin asset loading from HexTorq domains. Their `vercel.json` files include the required headers for this mix website.
+The four individual portfolio sites must allow iframe embedding and cross-origin asset loading from the HexTorq apex domain, the `www` domain, and HexTorq subdomains:
+
+- `https://hextorq.tech`
+- `https://www.hextorq.tech`
+- `https://*.hextorq.tech`
+
+Their `vercel.json` files include the required headers for this mix website. After changing those headers, Vercel must redeploy the individual portfolio sites before the browser receives the updated Content Security Policy.
 
 The production domains expected for this controller are `https://hextorq.tech` and `https://www.hextorq.tech`. If either domain is changed, update the `frame-ancestors` policy in all four individual portfolio projects and redeploy them on Vercel.
