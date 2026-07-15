@@ -1,38 +1,67 @@
 # HexTorq Portfolio Mix
 
-This is a static Vite controller for switching between four deployed HexTorq portfolio templates while keeping the same logical page route.
+Production controller website for switching between the four deployed HexTorq portfolio templates.
 
-## How It Works
+Repository: https://github.com/hextorq/HexTorq-Portfolio-Mix
 
-- The mix site owns the shared navigation: `/`, `/about/`, `/services/`, `/products/`, `/projects/`, `/process/`, `/contact/`.
-- Each template can live on its own production URL.
-- When the user switches templates, the mix app keeps the current route and loads the same route on the next template.
-- Each template has its own section hash map, so `/contact/` can open `#contact` in templates 1, 2 and 4, but `#cta` in template 3.
+## Website Overview
 
-## Configure Template URLs
+HexTorq Portfolio Mix is a Vite static site that loads the four individual HexTorq portfolio websites as full-screen templates. It defaults to Portfolio 4, preloads the other templates in the background, and gives visitors a very small UI switch button to randomly change the visual design.
 
-The four HexTorq portfolio deployments are already configured:
+The goal is to make one public website feel like multiple premium portfolio experiences while keeping the same route and content area.
 
-```txt
-https://portfolio-1.hextorq.tech
-https://portfolio-2.hextorq.tech
-https://portfolio-3.hextorq.tech
-https://portfolio-4.hextorq.tech
-```
+## Connected Portfolio URLs
 
-To override them, set the deployed origins in an environment variable:
+- Portfolio 1: https://portfolio-1.hextorq.tech/
+- Portfolio 2: https://portfolio-2.hextorq.tech/
+- Portfolio 3: https://portfolio-3.hextorq.tech/
+- Portfolio 4: https://portfolio-4.hextorq.tech/
 
-```bash
-VITE_TEMPLATE_URLS=https://site-1.com,https://site-2.com,https://site-3.com,https://site-4.com
-```
+Portfolio 4 is the default first-loaded template.
 
-Or paste the same comma-separated list into the Template Sources panel in the browser.
+## Route Behavior
 
-## Build
+The mix website keeps the shared route when switching designs:
+
+- `/`
+- `/about/`
+- `/services/`
+- `/products/`
+- `/projects/`
+- `/process/`
+- `/contact/`
+
+For example, if a visitor is viewing `/contact/` and switches UI, the next template opens its contact section instead of returning to the home page.
+
+## UI Behavior
+
+- Full-screen website experience with no visible admin panel.
+- Tiny `UI` switch button for changing the active template.
+- Portfolio 4 loads first for the fastest initial view.
+- The remaining templates preload in hidden iframes after the default site starts.
+- Switching after preload is a visibility change instead of a full cold load.
+
+## Static Build And SEO
+
+The project uses Vite with a prerender step. Running the build generates static HTML route folders in `dist/`, so deployed pages can be served directly as HTML, CSS, and JavaScript.
 
 ```bash
 npm install
 npm run build
 ```
 
-The build writes static HTML, CSS and JS into `dist/`, with prerendered route folders for all shared routes.
+The generated output includes prerendered pages for all shared routes.
+
+## Configuration
+
+The production template URLs are defined in `src/templates.js`.
+
+To override them during deployment, set:
+
+```bash
+VITE_TEMPLATE_URLS=https://site-1.com,https://site-2.com,https://site-3.com,https://site-4.com
+```
+
+## Deployment Notes
+
+The four individual portfolio sites must allow iframe embedding and cross-origin asset loading from HexTorq domains. Their `vercel.json` files include the required headers for this mix website.
